@@ -1,0 +1,1621 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Glog.AI",
+          "organization": "Glog.AI",
+          "fullName": "Glog, Making software more secure",
+          "version": "1.0.0",
+          "semanticVersion": "1.0.0",
+          "informationUri": "https://www.glog.ai",
+          "rules": [
+            {
+              "id": "6bab452f-2d8c-390a-9fa4-132e3db2c85a",
+              "name": "Potential YAML Deserialization Vulnerability Detected: Unsafe Methods and Recommended Safe Alternatives",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `yaml.load()` function in Python's PyYAML library is used to deserialize YAML documents. However, when used with the `Loader=yaml.UnsafeLoader` argument, it can create a potential security vulnerability. This is because `yaml.UnsafeLoader` allows the execution of arbitrary Python objects, which can lead to code execution if a malicious YAML document is processed.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to use `yaml.SafeLoader` instead of `yaml.UnsafeLoader`. The `SafeLoader` only allows simple Python objects like lists or dictionaries.\n\n## Source Code Fix Recommendation\n\nReplace the unsafe code:\n\n```python\nreturn yaml.load(user_input, Loader=yaml.UnsafeLoader)\n```\n\nwith the safe alternative:\n\n```python\nreturn yaml.load(user_input, Loader=yaml.SafeLoader)\n```\n\n## Library Dependencies\n\nThe code example requires the PyYAML library.\n\n## References\n\n- [OWASP Python Security - Deserialization](https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html#python)\n- [CWE-502: Deserialization of Untrusted Data](https://cwe.mitre.org/data/definitions/502.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-502",
+                    "url": "https://cwe.mitre.org/data/definitions/502.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-502"
+                ]
+              }
+            },
+            {
+              "id": "8dc1de52-424e-3a07-a857-26121b024718",
+              "name": "\"Shell Process Initiation: Potential Injection Vulnerability Detected\"",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\n\"Shell Process Initiation: Potential Injection Vulnerability Detected\" is a security vulnerability that can occur in Python when using the `os.system(cmd)` function. This function executes the command (a string) in a subshell. If the command string is built using external input, an attacker can inject malicious commands, leading to command injection attacks.\n\nCommand injection attacks can lead to serious security breaches, including unauthorized access, data theft, data corruption, and denial of service.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, avoid using `os.system(cmd)` with string formatting or concatenation that includes unsanitized user input. Instead, use safer functions that allow you to pass arguments separately from the command itself, such as `subprocess.run()` or `subprocess.Popen()`. These functions avoid shell interpretation and thus prevent command injection.\n\n## Source Code Fix Recommendation\n\nInstead of:\n\n```python\nimport os\ncmd = \"ls -l \" + user_input\nos.system(cmd)\n```\n\nUse:\n\n```python\nimport subprocess\ncmd = [\"ls\", \"-l\", user_input]\nsubprocess.run(cmd)\n```\n\n## Library Dependencies\n\nThe code example requires the built-in Python library `subprocess`.\n\n## References\n\n- [OWASP Command Injection](https://owasp.org/www-community/attacks/Command_Injection)\n- [CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')](https://cwe.mitre.org/data/definitions/78.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-78",
+                    "url": "https://cwe.mitre.org/data/definitions/78.html"
+                  }
+                ],
+                "severity": "HIGH",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-78"
+                ]
+              }
+            },
+            {
+              "id": "87407bf3-d0e6-3f1f-bf47-bd70a1de9691",
+              "name": "Insecure MD5 Hash Algorithm Detected, Use SHA256 or SHA3 Instead",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe MD5 hash algorithm is considered insecure for many cryptographic purposes as it is susceptible to hash collisions. This means that two different inputs can produce the same hash output, making it possible for an attacker to craft a malicious input that produces the same hash as a legitimate input. This can lead to various security issues such as data integrity violations and unauthorized access.\n\nIn Python, the `hashlib` library provides the `md5()` function to compute MD5 hashes. If this function is used to hash sensitive data such as passwords, it can expose the application to security risks.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to use a more secure hash algorithm such as SHA256 or SHA3. These algorithms are currently considered secure and are less likely to produce hash collisions.\n\n## Source Code Fix Recommendation\n\nReplace the use of the `md5()` function with the `sha256()` or `sha3_256()` function from the `hashlib` library. Here is how you can do it:\n\n```python\nfrom hashlib import sha256, sha3_256\nfrom binascii import hexlify\n\n# Using SHA256\ndigest = hexlify(sha256(user_input.encode()).digest()).decode(\"utf8\")\n\n# Using SHA3\ndigest = hexlify(sha3_256(user_input.encode()).digest()).decode(\"utf8\")\n```\n\n## Library Dependencies\n\nThe code example requires the following Python libraries:\n\n- `hashlib`: Provides the `md5()`, `sha256()`, and `sha3_256()` functions for computing hashes.\n- `binascii`: Provides the `hexlify()` function for converting binary data to a hexadecimal string representation.\n\n## References\n\n- [OWASP - Insecure Cryptographic Storage](https://owasp.org/www-project-top-ten/2017/A3_2017-Sensitive_Data_Exposure)\n- [CWE-327: Use of a Broken or Risky Cryptographic Algorithm](https://cwe.mitre.org/data/definitions/327.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-327",
+                    "url": "https://cwe.mitre.org/data/definitions/327.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-327"
+                ]
+              }
+            },
+            {
+              "id": "c7dd2dbb-c82d-3a93-ac4c-4b09e1e30eb2",
+              "name": "Weak MD5 Hash Vulnerability with usedforsecurity=False",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe MD5 hash function is considered weak due to its vulnerability to collision attacks. An attacker can generate different inputs that hash to the same MD5 hash, which can lead to unauthorized access or other security issues. In Python, the `hashlib.md5()` function has a `usedforsecurity` parameter that defaults to `True`. If this parameter is set to `False`, it indicates that the MD5 hash is not being used for a security-critical operation, which can be misleading and dangerous if it's not the case.\n\n## Mitigation Advice\n\nAvoid using MD5 for any security-critical operations, such as password storage or digital signatures. Instead, use a stronger hash function like SHA-256. If you must use MD5, ensure that the `usedforsecurity` parameter is set to `True` to accurately reflect its usage.\n\n## Source Code Fix Recommendation\n\nReplace the MD5 hash function with a stronger hash function like SHA-256. Here's how you can do it:\n\n```python\nfrom hashlib import sha256\nfrom binascii import hexlify\n\ndigest = hexlify(sha256(user_input.encode()).digest()).decode(\"utf8\")\n```\n\n## Library Dependencies\n\n- hashlib\n- binascii\n\n## References\n\n- [OWASP - Insecure Cryptographic Storage](https://owasp.org/www-project-top-ten/2017/A3_2017-Sensitive_Data_Exposure)\n- [OWASP - Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)\n- [CWE-327: Use of a Broken or Risky Cryptographic Algorithm](https://cwe.mitre.org/data/definitions/327.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-327",
+                    "url": "https://cwe.mitre.org/data/definitions/327.html"
+                  }
+                ],
+                "severity": "HIGH",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-327"
+                ]
+              }
+            },
+            {
+              "id": "7249af8c-cfec-38a8-9e52-38362475a9d5",
+              "name": "\"Shell Process Initiation: Potential Injection Vulnerability Detected\"",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\n\"Shell Process Initiation: Potential Injection Vulnerability Detected\" is a security vulnerability that can occur in Python programming language when a developer uses functions that execute shell commands, such as `os.system()`. This vulnerability can allow an attacker to execute arbitrary commands on the system by injecting malicious input into the `cmd` parameter.\n\nThis vulnerability is a type of injection attack, specifically a shell injection attack. It occurs when the application does not properly validate or sanitize user input before passing it to a shell command. This can allow an attacker to manipulate the command that is executed, potentially leading to unauthorized access, data loss, or even a full system compromise.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, developers should avoid using functions that execute shell commands whenever possible. If it is necessary to use such functions, they should ensure that user input is properly validated and sanitized before it is passed to the command.\n\nDevelopers should also use parameterized functions or prepared statements, which can automatically handle the sanitization of user input. This can help to prevent shell injection attacks.\n\n## Source Code Fix Recommendation\n\nInstead of using `os.system(cmd)`, you can use `subprocess.run()` which is a more secure function. Here is an example:\n\n```python\nimport subprocess\n\n# Instead of this:\n# os.system(cmd)\n\n# Do this:\nsubprocess.run(['command', 'arg1', 'arg2'])\n```\n\nIn this example, 'command', 'arg1', and 'arg2' should be replaced with the actual command and arguments you want to run. This way, the command and arguments are passed as a list of strings, which prevents shell injection attacks.\n\n## Library Dependencies\n\nThe code example requires the `subprocess` module, which is included in the standard Python library.\n\n## References\n\n- [OWASP Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html)\n- [CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')](https://cwe.mitre.org/data/definitions/78.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-78",
+                    "url": "https://cwe.mitre.org/data/definitions/78.html"
+                  }
+                ],
+                "severity": "HIGH",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-78"
+                ]
+              }
+            },
+            {
+              "id": "b3f7d6c5-6352-3e40-a4b6-bdb2cae25720",
+              "name": "Dockerfile Vulnerability: Missing '--no-install-recommends' Flag in 'apt-get' Command",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe Dockerfile vulnerability: Missing '--no-install-recommends' flag in 'apt-get' command is a security concern that arises when Docker images are built using the 'apt-get install' command without the '--no-install-recommends' flag. This can lead to the installation of unnecessary packages, increasing the attack surface of the Docker image.\n\n## Security Concern\n\nThe security concern here is that the additional unnecessary packages that get installed may contain vulnerabilities that can be exploited by an attacker. This increases the attack surface of the Docker image. Furthermore, these additional packages increase the size of the Docker image, which can lead to longer download times and more disk space usage.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to always use the '--no-install-recommends' flag when using the 'apt-get install' command in a Dockerfile. This will ensure that only the necessary packages are installed, reducing the attack surface and the size of the Docker image.\n\n## Source Code Fix Recommendation\n\nHere is how you can fix the specific vulnerability sink in your Dockerfile:\n\n```Dockerfile\nRUN apt-get update && apt-get install --no-install-recommends -y build-essential autoconf\n```\n\n## Library Dependencies\n\nThe code example requires the following library dependencies to execute properly:\n\n- build-essential: This package contains an informational list of packages which are considered essential for building Debian packages.\n- autoconf: This is an extensible package of M4 macros that produce shell scripts to automatically configure software source code packages.\n\n## References\n\n- [CWE-937: OWASP Top Ten 2017 Category A6 - Security Misconfiguration](https://cwe.mitre.org/data/definitions/937.html)\n\nPlease note that the links provided are valid and active at the time of writing this report."
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-937",
+                    "url": "https://cwe.mitre.org/data/definitions/937.html"
+                  }
+                ],
+                "severity": "HIGH",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-937"
+                ]
+              }
+            },
+            {
+              "id": "59016662-0c85-3199-b620-65d1e05c9229",
+              "name": "Jinja2 Environment Detected Without Autoescaping, Risk of XSS Attacks",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nJinja2 is a popular templating engine for Python. When creating a Jinja2 environment, if autoescaping is not enabled, it can lead to Cross-Site Scripting (XSS) vulnerabilities. XSS attacks occur when an attacker is able to inject malicious scripts into web pages viewed by other users. These scripts can steal sensitive information, manipulate web content, or redirect users to malicious websites.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, always enable autoescaping when creating a Jinja2 environment. Autoescaping automatically escapes output, which prevents the execution of malicious scripts.\n\n## Source Code Fix Recommendation\n\nHere is how you can enable autoescaping in your code:\n\n```python\nfrom jinja2 import Environment, select_autoescape\n\nenvironment = Environment(loader=loader, autoescape=select_autoescape(['html', 'xml']))\n```\n\nIn this code, `select_autoescape` enables autoescaping for files with the .html and .xml extensions.\n\n## Library Dependencies\n\nThe code example requires the following library:\n\n- Jinja2\n\nYou can install it using pip:\n\n```bash\npip install Jinja2\n```\n\n## References\n\n- [OWASP XSS (Cross Site Scripting) Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)\n- [OWASP Python Security - Jinja2](https://python-security.readthedocs.io/security.html#jinja2)\n- [CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')](https://cwe.mitre.org/data/definitions/79.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-79",
+                    "url": "https://cwe.mitre.org/data/definitions/79.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-79"
+                ]
+              }
+            },
+            {
+              "id": "6005e0dd-9ab5-3ab6-947a-edc888174640",
+              "name": "\"Shell Process Initiation: Potential Injection Vulnerability Detected\"",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\n\"Shell Process Initiation: Potential Injection Vulnerability Detected\" is a security vulnerability that can occur in Python programming language when a developer uses functions that execute shell commands, such as `os.system()`. This vulnerability can allow an attacker to execute arbitrary commands on the system by injecting malicious input into the `cmd` parameter.\n\nThis vulnerability is a type of injection attack, specifically a shell injection attack. It occurs when the application does not properly validate or sanitize user input before passing it to a shell command. This can allow an attacker to manipulate the command that is executed, potentially leading to unauthorized access, data loss, or even a full system compromise.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, developers should avoid using functions that execute shell commands whenever possible. If it is necessary to use such functions, they should ensure that user input is properly validated and sanitized before it is passed to the command.\n\nDevelopers should also use parameterized functions or prepared statements, which can automatically handle the sanitization of user input. This can help to prevent shell injection attacks.\n\n## Source Code Fix Recommendation\n\nInstead of using `os.system(cmd)`, you can use `subprocess.run()` which is a more secure function. Here is an example:\n\n```python\nimport subprocess\n\n# Instead of this:\n# os.system(cmd)\n\n# Do this:\nsubprocess.run(['command', 'arg1', 'arg2'])\n```\n\nIn this example, 'command', 'arg1', and 'arg2' should be replaced with the actual command and arguments you want to run. This way, the command and arguments are passed as a list of strings, which prevents shell injection attacks.\n\n## Library Dependencies\n\nThe code example requires the `subprocess` module, which is included in the standard Python library.\n\n## References\n\n- [OWASP Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html)\n- [CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')](https://cwe.mitre.org/data/definitions/78.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-78",
+                    "url": "https://cwe.mitre.org/data/definitions/78.html"
+                  }
+                ],
+                "severity": "HIGH",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-78"
+                ]
+              }
+            },
+            {
+              "id": "3aad065a-14c3-3abc-9917-032f443e88e9",
+              "name": "\"Shell Process Initiation: Potential Injection Vulnerability Detected\"",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\n\"Shell Process Initiation: Potential Injection Vulnerability Detected\" is a security vulnerability that occurs when an application provides an attacker the ability to control the argument to certain system calls or shell commands. In Python, this vulnerability can occur when using the `os.system()` function, which executes a shell command from a Python script. If the command string includes unsanitized user input, an attacker can execute arbitrary commands on the system.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, avoid using `os.system()` or similar functions that execute shell commands. If it's necessary to use such functions, ensure that the command string does not include any unsanitized user input. Instead, use safer alternatives like `subprocess.run()` or `os.execv()`, which do not invoke a shell and thus are not susceptible to shell injection attacks.\n\n## Source Code Fix Recommendation\n\nInstead of:\n\n```python\nimport os\nreturn os.system(command)\n```\n\nUse:\n\n```python\nimport subprocess\nreturn subprocess.run(command, shell=False, check=True)\n```\n\n## Library Dependencies\n\nThe code example requires the built-in Python library `subprocess`.\n\n## References\n\n- [OWASP Command Injection](https://owasp.org/www-community/attacks/Command_Injection)\n- [CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')](https://cwe.mitre.org/data/definitions/78.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-78",
+                    "url": "https://cwe.mitre.org/data/definitions/78.html"
+                  }
+                ],
+                "severity": "HIGH",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-78"
+                ]
+              }
+            },
+            {
+              "id": "672adcbe-52c0-3596-8662-b45143d557e8",
+              "name": "Potential YAML Deserialization Vulnerability Detected: Unsafe Methods Identified and Safe Alternatives Suggested",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe PyYAML library in Python allows for a high-level interface for YAML, YAML Ain't Markup Language. This library provides the `yaml.load(input)` function which can execute arbitrary Python commands resulting in a potential security vulnerability if untrusted user input is passed to it. This is due to the fact that the function deserializes YAML data which can be manipulated to execute arbitrary Python commands.\n\nThe `yaml.load_all(user_input, Loader=yaml.UnsafeLoader)` is a sink for this vulnerability as it uses the `UnsafeLoader` which can create any Python object, which can be a security risk if you receive a YAML document from an untrusted source such as the Internet. The function will only produce Python objects that are safe by default.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, you should never use `yaml.load()` with any loader. Instead, you should use `yaml.safe_load()` which only allows for the deserialization of simple Python objects like integers or lists.\n\n## Source Code Fix Recommendation\n\nReplace:\n\n```python\nresult = yaml.load_all(user_input, Loader=yaml.UnsafeLoader)\n```\n\nwith:\n\n```python\nresult = yaml.safe_load_all(user_input)\n```\n\n## Library Dependencies\n\nThe library dependencies required by the code example to execute properly is PyYAML.\n\n```python\npip install pyyaml\n```\n\n## References\n\n- [OWASP Python Security - Deserialization](https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html#python)\n- [CWE-502: Deserialization of Untrusted Data](https://cwe.mitre.org/data/definitions/502.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-502",
+                    "url": "https://cwe.mitre.org/data/definitions/502.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-502"
+                ]
+              }
+            },
+            {
+              "id": "f42af6dd-8b4f-3039-9461-56c3045bf6a1",
+              "name": "\"Shell=True Subprocess Call Security Vulnerability\"",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `shell=True` subprocess call security vulnerability in Python occurs when a programmer uses the `shell=True` argument in the `subprocess.Popen` function. This can lead to shell injection, a form of attack where an attacker can execute arbitrary commands directly on the operating system.\n\nThis vulnerability is dangerous because it allows an attacker to execute commands with the same privileges as the process that runs the Python script. If the process has high-level privileges, the attacker could take control of the system.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, avoid using `shell=True` in `subprocess.Popen` calls whenever possible. If you must use it, ensure that you properly sanitize and validate all inputs that are included in the command. \n\n## Source Code Fix Recommendation\n\nInstead of using `shell=True`, you can pass the command and its arguments as a list to `subprocess.Popen`. This way, the command is not run through a shell and shell injection is not possible.\n\nHere is an example of how to fix the code:\n\n```python\nimport subprocess\n\n# Vulnerable code\n# process = subprocess.Popen(command, shell=True)\n\n# Recommended fix\ncommand = ['ls', '-l']\nprocess = subprocess.Popen(command)\n```\n\n## Library Dependencies\n\nThe code example requires the `subprocess` module, which is included in the Python Standard Library, so no additional library dependencies are needed.\n\n## References\n\n- [OWASP Command Injection](https://owasp.org/www-community/attacks/Command_Injection)\n- [CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')](https://cwe.mitre.org/data/definitions/78.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-78",
+                    "url": "https://cwe.mitre.org/data/definitions/78.html"
+                  }
+                ],
+                "severity": "HIGH",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-78"
+                ]
+              }
+            },
+            {
+              "id": "e43ee840-42a3-3ba7-9b55-948922403e51",
+              "name": "Insecure MD5 Hash Algorithm Detected, Use SHA256 or SHA3 Instead",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe MD5 hash algorithm is considered insecure and deprecated due to its vulnerability to collision attacks. In a collision attack, an attacker can generate a different input that hashes to the same MD5 hash as the original input, thereby allowing them to impersonate or forge data. This vulnerability is particularly critical in security-sensitive operations such as password storage, digital signatures, or certificates.\n\nIn Python, the `hashlib` library provides access to different cryptographic hashing algorithms, including MD5. If your code uses the `hashlib.md5()` function, it is exposed to this vulnerability.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, you should replace MD5 with a more secure hash algorithm. The SHA-256 or SHA-3 algorithms are recommended as they are currently considered secure against collision attacks. These algorithms are also available in the `hashlib` library.\n\n## Source Code Fix Recommendation\n\nReplace:\n\n```python\nh = hashlib.md5()\n```\n\nWith:\n\n```python\nh = hashlib.sha256()\n```\n\nOr:\n\n```python\nh = hashlib.sha3_256()\n```\n\n## Library Dependencies\n\nThe only library dependency required by the code example is the `hashlib` library, which is included in the Python Standard Library.\n\n## References\n\n- [OWASP Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html)\n- [CWE-327: Use of a Broken or Risky Cryptographic Algorithm](https://cwe.mitre.org/data/definitions/327.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-327",
+                    "url": "https://cwe.mitre.org/data/definitions/327.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-327"
+                ]
+              }
+            },
+            {
+              "id": "ca4b7be4-8246-338a-ab63-a593643757db",
+              "name": "Insecure SHA1 Hash Algorithm Detected, Use SHA256 or SHA3 Instead",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe SHA-1 (Secure Hash Algorithm 1) is a cryptographic hash function which takes an input and produces a 160-bit (20-byte) hash value. This hash value is commonly rendered as a 40 digits long hexadecimal number. However, SHA-1 is no longer considered secure against well-funded attackers. In Python, the `hashlib` module provides a variety of different cryptographic hashing algorithms, including SHA-1. \n\nUsing SHA-1 for storing sensitive data or for data integrity checks is a security risk, as collisions can be found with relative ease, which means that an attacker can generate the same hash from a different input, leading to potential data integrity issues or unauthorized access.\n\n## Mitigation Advice\n\nIt is recommended to use a stronger hash function, such as SHA-256 or SHA-3. These hash functions are currently considered secure and provide a higher level of security compared to SHA-1.\n\n## Source Code Fix Recommendation\n\nReplace the usage of SHA-1 with SHA-256 or SHA-3. Here is an example of how to use SHA-256 and SHA-3 with the `hashlib` module in Python:\n\n```python\n# SHA-256\nh = hashlib.sha256()\n\n# SHA-3\nh = hashlib.sha3_256()\n```\n\n## Library Dependencies\n\nThe code example requires the `hashlib` module, which is included in the Python Standard Library, so no additional library dependencies are needed.\n\n## References\n\n- [OWASP Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html)\n- [CWE-327: Use of a Broken or Risky Cryptographic Algorithm](https://cwe.mitre.org/data/definitions/327.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-327",
+                    "url": "https://cwe.mitre.org/data/definitions/327.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-327"
+                ]
+              }
+            },
+            {
+              "id": "c71edfb5-89c4-3542-9699-50a0227b1644",
+              "name": "Untrusted Data Deserialization Vulnerability in Pickle Modules",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe \"Untrusted Data Deserialization Vulnerability in Pickle Modules\" is a security vulnerability in Python programming language that occurs when an application deserializes data from an untrusted source without proper validation. This can lead to arbitrary code execution, denial of service, or other security vulnerabilities.\n\nIn the provided code snippet, the application is using the `pickle.loads()` function to deserialize data that is received from a user. If an attacker can control the `user_input`, they can create a malicious payload that, when deserialized, can execute arbitrary code on the server.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, you should avoid deserializing data from untrusted sources. If you must deserialize data, use a safe serialization format such as JSON. If you must use `pickle`, ensure that the data is from a trusted source and is properly validated before deserialization.\n\n## Source Code Fix Recommendation\n\nReplace the `pickle.loads()` function with `json.loads()`. This will prevent arbitrary code execution as JSON deserialization does not allow for code execution.\n\n```python\nimport json\n\nreturn json.loads(user_input.encode(\"utf8\"))\n```\n\n## Library Dependencies\n\nThe code example requires the following Python libraries:\n\n- `pickle` (built-in)\n- `json` (built-in)\n\n## OWASP Resources\n\n- [OWASP Python Security - Deserialization](https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html#python)\n- [OWASP Top 10 2017 - A8:2017-Insecure Deserialization](https://owasp.org/www-project-top-ten/2017/A8_2017-Insecure_Deserialization)\n\n## Common Weakness Enumeration (CWE)\n\n- [CWE-502: Deserialization of Untrusted Data](https://cwe.mitre.org/data/definitions/502.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-502",
+                    "url": "https://cwe.mitre.org/data/definitions/502.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-502"
+                ]
+              }
+            },
+            {
+              "id": "f4c5c5d8-6045-3be3-b431-92ef7669d864",
+              "name": "MD5 Hash Weakness Vulnerability",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nMD5 Hash Weakness Vulnerability refers to the susceptibility of the MD5 hashing algorithm to various types of cryptographic attacks. These include collision attacks, where two different inputs produce the same hash, and preimage attacks, where it's possible to generate the original input given only the hash. This vulnerability can lead to serious security issues, such as unauthorized access, data corruption, and other forms of data breaches.\n\nIn Python, the `hashlib` module provides the `md5()` function, which implements the MD5 hashing algorithm. However, due to the aforementioned weaknesses, its use is not recommended for cryptographic purposes.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it's recommended to use stronger hashing algorithms, such as SHA-256 or SHA-3. These algorithms are currently considered secure against collision and preimage attacks.\n\n## Source Code Fix Recommendation\n\nReplace the use of `hashlib.md5()` with `hashlib.sha256()` or `hashlib.sha3_256()`. Here's an example:\n\n```python\nimport hashlib\n\n# Old vulnerable code\n# h = hashlib.md5()\n\n# New secure code\nh = hashlib.sha256()\n```\n\n## Library Dependencies\n\nThe only library dependency required by the code example is the built-in Python library `hashlib`.\n\n## References\n\n- [OWASP Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html)\n- [CWE-327: Use of a Broken or Risky Cryptographic Algorithm](https://cwe.mitre.org/data/definitions/327.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-327",
+                    "url": "https://cwe.mitre.org/data/definitions/327.html"
+                  }
+                ],
+                "severity": "HIGH",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-327"
+                ]
+              }
+            },
+            {
+              "id": "ea96b277-f905-343a-8d17-528798c98c16",
+              "name": "\"Untrusted Data Deserialization Vulnerability in Pickle and Related Modules\"",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nUntrusted Data Deserialization Vulnerability in Pickle and Related Modules is a critical security vulnerability in Python. The `pickle` module in Python is used for serializing and deserializing Python object structures. However, it is not safe to deserialize data that comes from an untrusted or unauthenticated source. This is because the `pickle` module is capable of executing arbitrary Python functions during deserialization, which can lead to remote code execution (RCE) if an attacker can supply a malicious payload.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, you should avoid using `pickle` or similar modules (like `cPickle`, `dill`, etc.) to deserialize data from untrusted sources. Instead, use safer alternatives like `json` or `yaml.safe_load` for deserialization. \n\n## Source Code Fix Recommendation\n\nReplace the `pickle.load(user_input)` with `json.loads(user_input)` or `yaml.safe_load(user_input)`. Here is an example:\n\n```python\nimport json\n# import yaml\n\ndef safe_deserialize(user_input):\n    return json.loads(user_input)\n    # return yaml.safe_load(user_input)\n```\n\n## Library Dependencies\n\nThe code example requires the `json` or `yaml` library to execute properly.\n\n## OWASP and CWE Links\n\n- [OWASP Deserialization Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html)\n- [CWE-502: Deserialization of Untrusted Data](https://cwe.mitre.org/data/definitions/502.html)\n\nPlease note that the links provided are active and accessible to anonymous users at the time of writing this report."
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-502",
+                    "url": "https://cwe.mitre.org/data/definitions/502.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-502"
+                ]
+              }
+            },
+            {
+              "id": "2256823a-91d0-3336-841e-19ec552cc24c",
+              "name": "Weak SHA1 Hash Vulnerability with usedforsecurity=False Setting",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe SHA-1 (Secure Hash Algorithm 1) is a cryptographic hash function that takes an input and produces a 160-bit (20-byte) hash value. This hash value is commonly rendered as a 40-digit hexadecimal number. However, SHA-1 is not considered secure against well-funded attackers. In Python, the `hashlib` module provides the algorithm interfaces to SHA1. If the `usedforsecurity` parameter is set to `False`, it means the hash function is not used for security purposes and this could lead to potential vulnerabilities.\n\n## Mitigation Advice\n\nThe best way to mitigate this vulnerability is to avoid using SHA-1 for any cryptographic purposes. Instead, use a stronger hash function like SHA-256 or SHA-3. If you must use SHA-1, ensure that it is not used for any security-critical purposes.\n\n## Source Code Fix Recommendation\n\nReplace the SHA-1 hash function with a stronger hash function. Here is an example of how to use SHA-256:\n\n```python\nimport hashlib\n\nh = hashlib.sha256()\n```\n\n## Library Dependencies\n\nThe code example requires the `hashlib` module, which is included in the Python Standard Library.\n\n## References\n\n- [OWASP Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html)\n- [CWE-327: Use of a Broken or Risky Cryptographic Algorithm](https://cwe.mitre.org/data/definitions/327.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-327",
+                    "url": "https://cwe.mitre.org/data/definitions/327.html"
+                  }
+                ],
+                "severity": "HIGH",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-327"
+                ]
+              }
+            },
+            {
+              "id": "90826fce-12bd-323b-b2bb-7b801bbd6d00",
+              "name": "Weak SHA1 Hash Vulnerability with usedforsecurity=False Setting",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe \"Weak SHA1 Hash Vulnerability with usedforsecurity=False Setting\" is a security vulnerability in Python's hashlib library. It arises when the SHA1 hashing algorithm is used with the `usedforsecurity=False` setting. SHA1 is considered weak due to known vulnerabilities and is not recommended for cryptographic security. Using SHA1 for security-sensitive operations can lead to a variety of security issues, such as collision attacks, where two different inputs produce the same hash.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to use a stronger hashing algorithm such as SHA256, SHA3, or BLAKE2. These algorithms are currently considered secure and are not known to have any significant vulnerabilities. \n\n## Source Code Fix Recommendation\n\nReplace the use of SHA1 with a stronger hashing algorithm. For example, you can replace:\n\n```python\nimport hashlib\nh = hashlib.new(\"SHA1\")\n```\n\nwith:\n\n```python\nimport hashlib\nh = hashlib.new(\"SHA256\")\n```\n\n## Library Dependencies\n\nThe code example requires the `hashlib` library, which is included in the Python Standard Library.\n\n## OWASP Resources\n\n- [OWASP Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html)\n- [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)\n\n## Common Weakness Enumeration (CWE)\n\n- [CWE-327: Use of a Broken or Risky Cryptographic Algorithm](https://cwe.mitre.org/data/definitions/327.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-327",
+                    "url": "https://cwe.mitre.org/data/definitions/327.html"
+                  }
+                ],
+                "severity": "HIGH",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-327"
+                ]
+              }
+            },
+            {
+              "id": "c45d90fc-9a78-32b0-997a-e27861f529ec",
+              "name": "Exec Usage Detected",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\n\"Exec Usage Detected\" is a vulnerability in Python programming language that arises when the `exec()` function is used. The `exec()` function is a built-in Python function that executes the Python code, which is passed as an argument. If the argument passed to the `exec()` function is not sanitized properly, it can lead to code injection attacks. This is because the `exec()` function executes the argument as a Python code, which can be manipulated by an attacker to execute malicious code.\n\n## Mitigation Advice\n\nAvoid using the `exec()` function whenever possible. If it's necessary to use `exec()`, ensure that the argument passed to `exec()` is sanitized properly. This means that any user-supplied input should be checked to ensure that it does not contain any malicious code. \n\n## Source Code Fix Recommendation\n\nInstead of using `exec()`, consider using safer alternatives like `ast.literal_eval()`. Here is an example:\n\n```python\nimport ast\n\n# Instead of this:\n# exec(code)\n\n# Do this:\nast.literal_eval(code)\n```\n\nIn this example, `ast.literal_eval()` safely parses and evaluates an expression node or a string containing a Python literal or container display. It's safer than `exec()` because it does not support arbitrary code execution.\n\n## Library Dependencies\n\nThe code example does not require any external library dependencies. The `ast` module is part of the Python Standard Library.\n\n## References\n\n- [CWE-94: Improper Control of Generation of Code ('Code Injection')](https://cwe.mitre.org/data/definitions/94.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-94",
+                    "url": "https://cwe.mitre.org/data/definitions/94.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-94"
+                ]
+              }
+            },
+            {
+              "id": "a2d37f0c-ff4c-35ce-8315-b6f11fa33e01",
+              "name": "Potential Insecure Function Use - Consider Safer ast.literal_eval.",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nIn Python, the `eval()` function is used to parse and evaluate a string as a Python expression. This function can be extremely dangerous if used improperly, as it can execute arbitrary code. This is a serious security risk if the string being evaluated is derived from user input or other untrusted sources. This vulnerability is known as \"Potential Insecure Function Use - Consider Safer ast.literal_eval.\"\n\nThe `ast.literal_eval()` function, on the other hand, safely parses and evaluates a string as a Python literal or container. Unlike `eval()`, `ast.literal_eval()` only evaluates Python literals and does not evaluate complex expressions or execute arbitrary code.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, you should avoid using the `eval()` function whenever possible, especially when dealing with user input or other untrusted sources. Instead, consider using `ast.literal_eval()` or other safer alternatives.\n\n## Source Code Fix Recommendation\n\nInstead of:\n\n```python\nreturn eval(code)\n```\n\nYou should use:\n\n```python\nimport ast\n\nreturn ast.literal_eval(code)\n```\n\n## Library Dependencies\n\nThe `ast` module is part of the Python Standard Library, so no additional library dependencies are required.\n\n## References\n\n- [CWE-94: Improper Control of Generation of Code ('Code Injection')](https://cwe.mitre.org/data/definitions/94.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-94",
+                    "url": "https://cwe.mitre.org/data/definitions/94.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-94"
+                ]
+              }
+            },
+            {
+              "id": "74440138-eb55-3bd1-a29e-c8f94ed8b6b8",
+              "name": "\"Vulnerability in Parsing Untrusted XML Data with xml.etree.ElementTree.fromstring\"",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `xml.etree.ElementTree.fromstring` function in Python's standard library is used to parse XML data from a string. However, it is vulnerable to XML External Entity (XXE) attacks if it is used to parse untrusted XML data. An XXE attack can lead to disclosure of internal files, denial of service, server side request forgery, port scanning from the perspective of the machine where the parser is located, and other system impacts.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, you should avoid parsing untrusted XML data with `xml.etree.ElementTree.fromstring`. Instead, use a safe XML library or use `xml.etree.ElementTree.fromstring` in a way that disables DTD (Document Type Definition) processing. \n\n## Source Code Fix Recommendation\n\nHere is a way to parse XML data safely with `defusedxml` library:\n\n```python\nfrom defusedxml.ElementTree import parse\n\nnode = parse(xml)\n```\n\n## Library Dependencies\n\nThe code example requires the `defusedxml` library. You can install it using pip:\n\n```\npip install defusedxml\n```\n\n## References\n\n- [OWASP XXE Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html)\n- [CWE-611: Improper Restriction of XML External Entity Reference ('XXE')](https://cwe.mitre.org/data/definitions/611.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-611",
+                    "url": "https://cwe.mitre.org/data/definitions/611.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-611"
+                ]
+              }
+            },
+            {
+              "id": "a8a609d7-3356-3aa2-a6b3-7b19099c64f5",
+              "name": "\"Vulnerability of lxml.etree.parse to XML Attacks: Replace with Defusedxml Equivalent Function\"",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `lxml.etree.parse` function in Python's lxml library is vulnerable to XML attacks, such as XML External Entity (XXE) and XML Bomb (also known as Billion Laughs Attack). These attacks can lead to disclosure of internal files, denial of service, server side request forgery, port scanning from the perspective of the machine where the parser is located, and other system impacts.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to use the `defusedxml` library, which is specifically designed to counteract these types of attacks. This library provides a safer version of the XML parsing functions, which are resistant to XXE and XML Bomb attacks.\n\n## Source Code Fix Recommendation\n\nReplace:\n\n```python\nimport lxml.etree\nfrom io import StringIO\n\ntree = lxml.etree.parse(StringIO(xml))\n```\n\nWith:\n\n```python\nfrom defusedxml import DefusedXmlException\nfrom defusedxml.lxml import parse\nfrom io import StringIO\n\ntry:\n    tree = parse(StringIO(xml))\nexcept DefusedXmlException:\n    print(\"XML Bomb detected\")\n```\n\n## Library Dependencies\n\n- lxml\n- defusedxml\n- io\n\n## References\n\n- [CWE-611: Improper Restriction of XML External Entity Reference](https://cwe.mitre.org/data/definitions/611.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-611",
+                    "url": "https://cwe.mitre.org/data/definitions/611.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-611"
+                ]
+              }
+            },
+            {
+              "id": "6a8b5c00-27dc-35c9-8b70-d5ec020a7a3f",
+              "name": "\"Vulnerability in Parsing Untrusted XML Data with lxml.etree.fromstring: Use defusedxml Equivalent Function\"",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `lxml.etree.fromstring` function in Python's lxml library is used to parse XML data from a string. However, it is vulnerable to XML External Entity (XXE) attacks if it parses untrusted XML data. An XXE attack can lead to disclosure of internal files, denial of service, server side request forgery, port scanning from the perspective of the machine where the parser is located, and other system impacts.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to use the `defusedxml` library, which is a Python XML library that is designed to be safe against XML entity expansion attacks. The `defusedxml.lxml.parse` function can be used as a drop-in replacement for `lxml.etree.fromstring`.\n\n## Source Code Fix Recommendation\n\nReplace:\n\n```python\nfrom lxml import etree\nreturn etree.fromstring(user_input)\n```\n\nWith:\n\n```python\nfrom defusedxml.lxml import fromstring\nreturn fromstring(user_input)\n```\n\n## Library Dependencies\n\nThe code example requires the `defusedxml` library.\n\n## References\n\n- [OWASP XXE Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html)\n- [CWE-611: Improper Restriction of XML External Entity Reference ('XXE')](https://cwe.mitre.org/data/definitions/611.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-611",
+                    "url": "https://cwe.mitre.org/data/definitions/611.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-611"
+                ]
+              }
+            },
+            {
+              "id": "8e980c02-7f76-339e-bbb7-036073682219",
+              "name": "\"Vulnerability to XML Attacks with xml.dom.pulldom.parseString: Use Defusedxml Equivalent Function or Call defusedxml.defuse_stdlib()\"",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `xml.dom.pulldom.parseString` function in Python's standard library is vulnerable to XML attacks, such as XML External Entity (XXE) and XML Bomb (also known as Billion Laughs Attack). These attacks can lead to disclosure of internal files, denial of service, server side request forgery, port scanning from the perspective of the machine where the parser is located, and other system impacts.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to use the `defusedxml` library, which is a Python package that patches the built-in XML libraries to make them safe from XML vulnerabilities. \n\n## Source Code Fix Recommendation\n\nReplace the vulnerable `pulldom.parseString` function with the equivalent function from the `defusedxml` library. \n\nBefore:\n\n```python\nfrom xml.dom.pulldom import parseString\n\ndef parse_xml(user_input):\n    return parseString(user_input)\n```\n\nAfter:\n\n```python\nfrom defusedxml import defuse_stdlib\nfrom xml.dom.pulldom import parseString\n\ndefuse_stdlib()\n\ndef parse_xml(user_input):\n    return parseString(user_input)\n```\n\n## Library Dependencies\n\nThe code example requires the `defusedxml` library. You can install it using pip:\n\n```\npip install defusedxml\n```\n\n## References\n\n- [OWASP XXE Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html)\n- [CWE-611: Improper Restriction of XML External Entity Reference ('XXE')](https://cwe.mitre.org/data/definitions/611.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-611",
+                    "url": "https://cwe.mitre.org/data/definitions/611.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-611"
+                ]
+              }
+            },
+            {
+              "id": "1c753121-1472-370f-b83a-b49140aafd1d",
+              "name": "\"Vulnerability in Parsing Untrusted XML Data with xml.sax.parseString: Use Defusedxml Equivalent Function or Call defusedxml.defuse_stdlib()\"",
+              "helpUri": "https://www.glog.ai/",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `xml.sax.parseString` function in Python's standard library is vulnerable to XML External Entity (XXE) attacks when parsing untrusted XML data. An XXE attack can lead to the disclosure of confidential data, denial of service, server side request forgery, port scanning from the perspective of the machine where the parser is located, and other system impacts.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, you should avoid using the `xml.sax.parseString` function to parse untrusted XML data. Instead, use the equivalent function from the `defusedxml` library, which is a Python module that patches the built-in XML libraries to make them safe from XXE attacks.\n\n## Source Code Fix Recommendation\n\nReplace:\n\n```python\nfrom xml.sax import parseString\nreturn parseString(user_input, ContentHandler())\n```\n\nwith:\n\n```python\nfrom defusedxml.sax import parseString\nreturn parseString(user_input, ContentHandler())\n```\n\nAlternatively, you can call `defusedxml.defuse_stdlib()` at the beginning of your script to patch the built-in XML libraries:\n\n```python\nimport defusedxml\ndefusedxml.defuse_stdlib()\n\nfrom xml.sax import parseString\nreturn parseString(user_input, ContentHandler())\n```\n\n## Library Dependencies\n\nThe `defusedxml` library is required to mitigate this vulnerability. You can install it using pip:\n\n```\npip install defusedxml\n```\n\n## References\n\n- [CWE-611: Improper Restriction of XML External Entity Reference ('XXE')](https://cwe.mitre.org/data/definitions/611.html)"
+              },
+              "properties": {
+                "cwe": [
+                  {
+                    "id": "CWE-611",
+                    "url": "https://cwe.mitre.org/data/definitions/611.html"
+                  }
+                ],
+                "severity": "MEDIUM",
+                "kind": "FAIL",
+                "tags": [
+                  "CWE-611"
+                ]
+              }
+            }
+          ],
+          "language": "en-US",
+          "contents": [
+            "localizedData",
+            "nonLocalizedData"
+          ],
+          "isComprehensive": false
+        }
+      },
+      "language": "en-US",
+      "results": [
+        {
+          "ruleId": "6bab452f-2d8c-390a-9fa4-132e3db2c85a",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Potential YAML Deserialization Vulnerability Detected: Unsafe Methods and Recommended Safe Alternatives"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/deserialization.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 17,
+                  "startColumn": 16,
+                  "endLine": 17,
+                  "endColumn": 63,
+                  "snippet": {
+                    "text": "        return yaml.load(user_input, Loader=yaml.UnsafeLoader)"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "ebb5cd7e23706717cb49c88ad8740a4880fcb47433ecf49d15e30555882dfc98",
+            "glog-pfp-ruleFileCode/v1": "a22b784c6dbd638bf5a346d10e95359ec5d6ab57f37909c9f9070c3762ffea2d"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "a22b784c6dbd638bf5a346d10e95359ec5d6ab57f37909c9f9070c3762ffea2d"
+          },
+          "properties": {}
+        },
+        {
+          "ruleId": "8dc1de52-424e-3a07-a857-26121b024718",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "\"Shell Process Initiation: Potential Injection Vulnerability Detected\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/falcon_app.py"
+                },
+                "region": {
+                  "startLine": 29,
+                  "startColumn": 9,
+                  "endLine": 29,
+                  "endColumn": 23,
+                  "snippet": {
+                    "text": "        os.system(cmd)\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 28,
+                  "endLine": 30,
+                  "snippet": {
+                    "text": "        cmd = \"echo \" + str(user_input[:10])\n        os.system(cmd)\n\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "f79f48225761092ba6ddb6f2d1971195e5c4f7f984530b8a00d63841aec9ded1",
+            "glog-pfp-ruleFileCode/v1": "4c4d9ec902a0fa304c02a05e9f91e65fbe6e21ddd61536e49c4a60177fdfa6c1"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "4c4d9ec902a0fa304c02a05e9f91e65fbe6e21ddd61536e49c4a60177fdfa6c1"
+          },
+          "properties": {
+            "issue_severity": "HIGH",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "87407bf3-d0e6-3f1f-bf47-bd70a1de9691",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Insecure MD5 Hash Algorithm Detected, Use SHA256 or SHA3 Instead"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/falcon_app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 26,
+                  "startColumn": 26,
+                  "endLine": 26,
+                  "endColumn": 41,
+                  "snippet": {
+                    "text": "        digest = hexlify(md5(user_input).digest()).decode(\"utf8\")"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "a13d56e51777f671d09a69590cc04dd467c3c6e36ca031ad991ec82b5fa2a553",
+            "glog-pfp-ruleFileCode/v1": "28f19f4a187c74d676170e9523edbd9fa16dd23c7c95ddc4385adc5a3f4a9093"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "28f19f4a187c74d676170e9523edbd9fa16dd23c7c95ddc4385adc5a3f4a9093"
+          },
+          "properties": {}
+        },
+        {
+          "ruleId": "c7dd2dbb-c82d-3a93-ac4c-4b09e1e30eb2",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "Weak MD5 Hash Vulnerability with usedforsecurity=False"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/falcon_app.py"
+                },
+                "region": {
+                  "startLine": 26,
+                  "startColumn": 26,
+                  "endLine": 26,
+                  "endColumn": 41,
+                  "snippet": {
+                    "text": "        digest = hexlify(md5(user_input).digest()).decode(\"utf8\")\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 25,
+                  "endLine": 27,
+                  "snippet": {
+                    "text": "\n        digest = hexlify(md5(user_input).digest()).decode(\"utf8\")\n\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "c545a9475ebbcc2c8a3bd7e9d9616c969efdf961c7ea95bc8edb56bd673de8db",
+            "glog-pfp-ruleFileCode/v1": "727e225ba1ca8fc58fa4c2b1fcd35ab34fd75ab1549eb9cd6581fa575167e348"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "727e225ba1ca8fc58fa4c2b1fcd35ab34fd75ab1549eb9cd6581fa575167e348"
+          },
+          "properties": {
+            "issue_severity": "HIGH",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "7249af8c-cfec-38a8-9e52-38362475a9d5",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "\"Shell Process Initiation: Potential Injection Vulnerability Detected\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/fastapi_app.py"
+                },
+                "region": {
+                  "startLine": 43,
+                  "startColumn": 9,
+                  "endLine": 43,
+                  "endColumn": 23,
+                  "snippet": {
+                    "text": "        os.system(cmd)\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 42,
+                  "endLine": 44,
+                  "snippet": {
+                    "text": "        print(\"will echo command\")\n        os.system(cmd)\n        print(\"about to sleep\")\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "e38f0751d21adc8d3c4fb8ef1c80bf1bb077abe064a38634d25de1c0728d4b49",
+            "glog-pfp-ruleFileCode/v1": "2483ff047489a5adf0e1d2807d9464cf0d393ca88e6858342c4d70dec9d8044a"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "2483ff047489a5adf0e1d2807d9464cf0d393ca88e6858342c4d70dec9d8044a"
+          },
+          "properties": {
+            "issue_severity": "HIGH",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "b3f7d6c5-6352-3e40-a4b6-bdb2cae25720",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "Dockerfile Vulnerability: Missing '--no-install-recommends' Flag in 'apt-get' Command"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Dockerfile",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 4,
+                  "startColumn": 1,
+                  "endLine": 4,
+                  "endColumn": 1,
+                  "snippet": {
+                    "text": "RUN apt-get update && apt-get install -y build-essential autoconf"
+                  }
+                }
+              },
+              "message": {
+                "text": "Dockerfile"
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "a36be055386bdb9f4afdee903c84a221fa6bdcbbaace966f0c2021c1a930980d",
+            "glog-pfp-ruleFileCode/v1": "1c09438ba9287253d8ef420309d394478399f1bdccb08d606fb3618ed40578c6"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "1c09438ba9287253d8ef420309d394478399f1bdccb08d606fb3618ed40578c6"
+          }
+        },
+        {
+          "ruleId": "59016662-0c85-3199-b620-65d1e05c9229",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Jinja2 Environment Detected Without Autoescaping, Risk of XSS Attacks"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/flask_app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 15,
+                  "endLine": 11,
+                  "endColumn": 41,
+                  "snippet": {
+                    "text": "environment = Environment(loader=loader)"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "ddc18ec18bb71e63a79652df8dd8a07bb7ac4572d159440b38b82ac529b1fb5a",
+            "glog-pfp-ruleFileCode/v1": "1a3017dbf6667a695951e43306107fa69b33643dd97f20276292bab3ab62f611"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "1a3017dbf6667a695951e43306107fa69b33643dd97f20276292bab3ab62f611"
+          },
+          "properties": {}
+        },
+        {
+          "ruleId": "6005e0dd-9ab5-3ab6-947a-edc888174640",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "\"Shell Process Initiation: Potential Injection Vulnerability Detected\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/falcon_app.py"
+                },
+                "region": {
+                  "startLine": 64,
+                  "startColumn": 5,
+                  "endLine": 64,
+                  "endColumn": 19,
+                  "snippet": {
+                    "text": "    os.system(cmd)\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 63,
+                  "endLine": 65,
+                  "snippet": {
+                    "text": "    cmd = \"echo \" + str(user_input)\n    os.system(cmd)\n\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "c9236dadbddc52a5490e568869e7da3756cd6f272af5d981199d2d669580783f",
+            "glog-pfp-ruleFileCode/v1": "062afc9d837ed4b4529b817f5855fc304566b6e8b137bf2fb2633553a2cff2f3"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "062afc9d837ed4b4529b817f5855fc304566b6e8b137bf2fb2633553a2cff2f3"
+          },
+          "properties": {
+            "issue_severity": "HIGH",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "3aad065a-14c3-3abc-9917-032f443e88e9",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "\"Shell Process Initiation: Potential Injection Vulnerability Detected\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/cmdi.py"
+                },
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 12,
+                  "endLine": 6,
+                  "endColumn": 30,
+                  "snippet": {
+                    "text": "    return os.system(command)\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 5,
+                  "endLine": 7,
+                  "snippet": {
+                    "text": "def do_os_system(command):\n    return os.system(command)\n\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "942224f43bab568cd54c50854483ca8f3d3da0261f12043d236a074bcecae542",
+            "glog-pfp-ruleFileCode/v1": "0d450ceb8bfa66b5cbf2667f2908ccd570c071ae098e49989b1cd04b0291aaa5"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "0d450ceb8bfa66b5cbf2667f2908ccd570c071ae098e49989b1cd04b0291aaa5"
+          },
+          "properties": {
+            "issue_severity": "HIGH",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "672adcbe-52c0-3596-8662-b45143d557e8",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Potential YAML Deserialization Vulnerability Detected: Unsafe Methods Identified and Safe Alternatives Suggested"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/deserialization.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 23,
+                  "startColumn": 14,
+                  "endLine": 23,
+                  "endColumn": 65,
+                  "snippet": {
+                    "text": "    result = yaml.load_all(user_input, Loader=yaml.UnsafeLoader)"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "0c49b71a6216cad401a4c7feefed45b19319820a005e464d7b1005356f437200",
+            "glog-pfp-ruleFileCode/v1": "81033a99511994632fef6d76a0f6a8ff8b2502930bec4cd74cc19665ee1b5cec"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "81033a99511994632fef6d76a0f6a8ff8b2502930bec4cd74cc19665ee1b5cec"
+          },
+          "properties": {}
+        },
+        {
+          "ruleId": "f42af6dd-8b4f-3039-9461-56c3045bf6a1",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "\"Shell=True Subprocess Call Security Vulnerability\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/cmdi.py"
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 15,
+                  "endLine": 11,
+                  "endColumn": 6,
+                  "snippet": {
+                    "text": "    process = subprocess.Popen(\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 10,
+                  "endLine": 14,
+                  "snippet": {
+                    "text": "    process = subprocess.Popen(\n        command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True\n    )\n    stdout, _ = process.communicate()\n    return stdout\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "2a03bf04985708b478ce37829fd72e18746f71f81d3ad64cc4d661384c2ff4dd",
+            "glog-pfp-ruleFileCode/v1": "729dbb816f9ca1809e88bb42411491e211028ced980865e787d4c1e2e1c0311f"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "729dbb816f9ca1809e88bb42411491e211028ced980865e787d4c1e2e1c0311f"
+          },
+          "properties": {
+            "issue_severity": "HIGH",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "e43ee840-42a3-3ba7-9b55-948922403e51",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Insecure MD5 Hash Algorithm Detected, Use SHA256 or SHA3 Instead"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/hash.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 19,
+                  "startColumn": 9,
+                  "endLine": 19,
+                  "endColumn": 22,
+                  "snippet": {
+                    "text": "    h = hashlib.md5()"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "3849d01a06a030fe52ea5209fabd2e5a26ec6497ac4c026fb125383959eeb673",
+            "glog-pfp-ruleFileCode/v1": "b6f35e22e0a3cd02e234b258a1d1b774d2f8bf997f1d746a2b09b882e2327352"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "b6f35e22e0a3cd02e234b258a1d1b774d2f8bf997f1d746a2b09b882e2327352"
+          },
+          "properties": {}
+        },
+        {
+          "ruleId": "ca4b7be4-8246-338a-ab63-a593643757db",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Insecure SHA1 Hash Algorithm Detected, Use SHA256 or SHA3 Instead"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/hash.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 24,
+                  "startColumn": 9,
+                  "endLine": 24,
+                  "endColumn": 23,
+                  "snippet": {
+                    "text": "    h = hashlib.sha1()"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "a697571c87fb19dfe364a20ffe63f7f9ef06fe78367224093736e1d571fa412b",
+            "glog-pfp-ruleFileCode/v1": "ffee3ee2824fc19ca584e5e88e0bb2eaeef5b04494972b2a2863211279e04879"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "ffee3ee2824fc19ca584e5e88e0bb2eaeef5b04494972b2a2863211279e04879"
+          },
+          "properties": {}
+        },
+        {
+          "ruleId": "c71edfb5-89c4-3542-9699-50a0227b1644",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Untrusted Data Deserialization Vulnerability in Pickle Modules"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/deserialization.py"
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 12,
+                  "endLine": 12,
+                  "endColumn": 52,
+                  "snippet": {
+                    "text": "    return pickle.loads(user_input.encode(\"utf-8\"))\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 11,
+                  "endLine": 13,
+                  "snippet": {
+                    "text": "def do_pickle_loads(user_input):\n    return pickle.loads(user_input.encode(\"utf-8\"))\n\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "ad83deb521f800dcce43b36ca0ad2666a0c1a1b9bcb7f585f2f8d62b9b2c5721",
+            "glog-pfp-ruleFileCode/v1": "7f78222f7e7341bd01095f4eb6037f535f834fb6bc925229e4d5c5fff5eb1241"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "7f78222f7e7341bd01095f4eb6037f535f834fb6bc925229e4d5c5fff5eb1241"
+          },
+          "properties": {
+            "issue_severity": "MEDIUM",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "f4c5c5d8-6045-3be3-b431-92ef7669d864",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "MD5 Hash Weakness Vulnerability"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/hash.py"
+                },
+                "region": {
+                  "startLine": 19,
+                  "startColumn": 9,
+                  "endLine": 19,
+                  "endColumn": 22,
+                  "snippet": {
+                    "text": "    h = hashlib.md5()\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 18,
+                  "endLine": 20,
+                  "snippet": {
+                    "text": "def do_hashlib_md5(user_input):\n    h = hashlib.md5()\n    return _hash(h, user_input)\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "b29793527d625038f2455361e6b85227a011452660d5739334e998993581222d",
+            "glog-pfp-ruleFileCode/v1": "8e2c98a24d1b9c78ae5f1b4d9119649412fe1888bd2538d4f45341561f1bca8f"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "8e2c98a24d1b9c78ae5f1b4d9119649412fe1888bd2538d4f45341561f1bca8f"
+          },
+          "properties": {
+            "issue_severity": "HIGH",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "ea96b277-f905-343a-8d17-528798c98c16",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\"Untrusted Data Deserialization Vulnerability in Pickle and Related Modules\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/deserialization.py"
+                },
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 12,
+                  "endLine": 8,
+                  "endColumn": 35,
+                  "snippet": {
+                    "text": "    return pickle.load(user_input)\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 7,
+                  "endLine": 9,
+                  "snippet": {
+                    "text": "    user_input = io.BytesIO(user_input.encode(\"utf-8\"))\n    return pickle.load(user_input)\n\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "d447403b92a628b8dbfe03a296ce3ccaf77e002272b7e6c877064d922ac53463",
+            "glog-pfp-ruleFileCode/v1": "2cc386bb9a8ba79155b3025516abd7a05ef9a5f4b387c7cc6cbeb098707d1159"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "2cc386bb9a8ba79155b3025516abd7a05ef9a5f4b387c7cc6cbeb098707d1159"
+          },
+          "properties": {
+            "issue_severity": "MEDIUM",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "2256823a-91d0-3336-841e-19ec552cc24c",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "Weak SHA1 Hash Vulnerability with usedforsecurity=False Setting"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/hash.py"
+                },
+                "region": {
+                  "startLine": 24,
+                  "startColumn": 9,
+                  "endLine": 24,
+                  "endColumn": 23,
+                  "snippet": {
+                    "text": "    h = hashlib.sha1()\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 23,
+                  "endLine": 25,
+                  "snippet": {
+                    "text": "def do_hashlib_sha1(user_input):\n    h = hashlib.sha1()\n    return _hash(h, user_input)\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "377ff98878b73f9324b39036b59edccc4a796382a5e099ce0601c0aed5d9ef7b",
+            "glog-pfp-ruleFileCode/v1": "91a6988d1470b3152888b87de267305fe1dbca09d47b38a1768b425798887098"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "91a6988d1470b3152888b87de267305fe1dbca09d47b38a1768b425798887098"
+          },
+          "properties": {
+            "issue_severity": "HIGH",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "90826fce-12bd-323b-b2bb-7b801bbd6d00",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "Weak SHA1 Hash Vulnerability with usedforsecurity=False Setting"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/hash.py"
+                },
+                "region": {
+                  "startLine": 29,
+                  "startColumn": 9,
+                  "endLine": 29,
+                  "endColumn": 28,
+                  "snippet": {
+                    "text": "    h = hashlib.new(\"SHA1\")\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 28,
+                  "endLine": 30,
+                  "snippet": {
+                    "text": "def do_hashlib_new(user_input):\n    h = hashlib.new(\"SHA1\")\n    return _hash(h, user_input)\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "ef894b0fe00429318a99687685cff056ad1ea7726185e835e4ceda67a89ef301",
+            "glog-pfp-ruleFileCode/v1": "83c5a3f93f2fa9d321cfde20e06a25fa30a49d42b8fe0b3e847b070bed2468db"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "83c5a3f93f2fa9d321cfde20e06a25fa30a49d42b8fe0b3e847b070bed2468db"
+          },
+          "properties": {
+            "issue_severity": "HIGH",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "c45d90fc-9a78-32b0-997a-e27861f529ec",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Exec Usage Detected"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/unsafe_code_exec.py"
+                },
+                "region": {
+                  "startLine": 2,
+                  "startColumn": 5,
+                  "endLine": 2,
+                  "endColumn": 15,
+                  "snippet": {
+                    "text": "    exec(code)\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 1,
+                  "endLine": 3,
+                  "snippet": {
+                    "text": "def do_exec(code):\n    exec(code)\n\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "bfb85c43ba7088f79796c4dac1d98e03bf0efebfabd2f54ab04a2e2c53b12696",
+            "glog-pfp-ruleFileCode/v1": "a138518e60403eba05d231e1d4f3249e17c3fc0d7498256d960eba60246fc4dd"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "a138518e60403eba05d231e1d4f3249e17c3fc0d7498256d960eba60246fc4dd"
+          },
+          "properties": {
+            "issue_severity": "MEDIUM",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "a2d37f0c-ff4c-35ce-8315-b6f11fa33e01",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Potential Insecure Function Use - Consider Safer ast.literal_eval."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/unsafe_code_exec.py"
+                },
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 12,
+                  "endLine": 6,
+                  "endColumn": 22,
+                  "snippet": {
+                    "text": "    return eval(code)\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 5,
+                  "endLine": 7,
+                  "snippet": {
+                    "text": "def do_eval(code):\n    return eval(code)\n\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "66552eac53651f673f03df2aa7b838655d6c4bb61c3a131f37879971f02c60f0",
+            "glog-pfp-ruleFileCode/v1": "6e7660b3e5826b5e29b77114919e25732a0d96d7a703e7c36be9aad80597c75a"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "6e7660b3e5826b5e29b77114919e25732a0d96d7a703e7c36be9aad80597c75a"
+          },
+          "properties": {
+            "issue_severity": "MEDIUM",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "74440138-eb55-3bd1-a29e-c8f94ed8b6b8",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\"Vulnerability in Parsing Untrusted XML Data with xml.etree.ElementTree.fromstring\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/xpath.py"
+                },
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 12,
+                  "endLine": 33,
+                  "endColumn": 30,
+                  "snippet": {
+                    "text": "    node = ET.fromstring(xml)\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 32,
+                  "endLine": 34,
+                  "snippet": {
+                    "text": "def do_xml_etree_elementtree_findall(user_input):\n    node = ET.fromstring(xml)\n    return node.findall(user_input)[0][0].text\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "159e7b5a3d88a1f394861a1267531498a5b03da65fc82c2341d1cb4a2e33d9a1",
+            "glog-pfp-ruleFileCode/v1": "36db122993efa788dc9101aabbd039fb52b1b094febf294e43bb446ccece7337"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "36db122993efa788dc9101aabbd039fb52b1b094febf294e43bb446ccece7337"
+          },
+          "properties": {
+            "issue_severity": "MEDIUM",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "a8a609d7-3356-3aa2-a6b3-7b19099c64f5",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\"Vulnerability of lxml.etree.parse to XML Attacks: Replace with Defusedxml Equivalent Function\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/xpath.py"
+                },
+                "region": {
+                  "startLine": 19,
+                  "startColumn": 8,
+                  "endLine": 19,
+                  "endColumn": 39,
+                  "snippet": {
+                    "text": "tree = lxml.etree.parse(StringIO(xml))\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 18,
+                  "endLine": 20,
+                  "snippet": {
+                    "text": "\ntree = lxml.etree.parse(StringIO(xml))\ntree.xpath('/planet[name[text()=\"Kepler\"]]')\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "30a56cf0fbe39a262c78da85f0c528b6e8a98652fa5644c94e0cb74cc54a5746",
+            "glog-pfp-ruleFileCode/v1": "967cf9bc3f7efa1a1188c015767cc3922184921908bcf0efb602142cd99d3cc5"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "967cf9bc3f7efa1a1188c015767cc3922184921908bcf0efb602142cd99d3cc5"
+          },
+          "properties": {
+            "issue_severity": "MEDIUM",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "6a8b5c00-27dc-35c9-8b70-d5ec020a7a3f",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\"Vulnerability in Parsing Untrusted XML Data with lxml.etree.fromstring: Use defusedxml Equivalent Function\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/xxe.py"
+                },
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 12,
+                  "endLine": 8,
+                  "endColumn": 40,
+                  "snippet": {
+                    "text": "    return etree.fromstring(user_input)\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 7,
+                  "endLine": 9,
+                  "snippet": {
+                    "text": "def do_lxml_etree_fromstring(user_input):\n    return etree.fromstring(user_input)\n\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "a8b7317df8ccd2f3078ec0012e55b7711e994e002694da85a4f2199f8ff07e0b",
+            "glog-pfp-ruleFileCode/v1": "6baf3ed8114bc31c259c8c6edb892b4c46d3ce67eb24beec39b4c165712ed6ae"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "6baf3ed8114bc31c259c8c6edb892b4c46d3ce67eb24beec39b4c165712ed6ae"
+          },
+          "properties": {
+            "issue_severity": "MEDIUM",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "8e980c02-7f76-339e-bbb7-036073682219",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\"Vulnerability to XML Attacks with xml.dom.pulldom.parseString: Use Defusedxml Equivalent Function or Call defusedxml.defuse_stdlib()\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/xxe.py"
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 12,
+                  "endLine": 12,
+                  "endColumn": 43,
+                  "snippet": {
+                    "text": "    return pulldom.parseString(user_input)\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 11,
+                  "endLine": 13,
+                  "snippet": {
+                    "text": "def do_xml_dom_pulldom_parsestring(user_input):\n    return pulldom.parseString(user_input)\n\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "c93e81997d3dda63464fe5d83e9f170f74b7925e8a751ec308e06a651cc7dce1",
+            "glog-pfp-ruleFileCode/v1": "73d71b511bb1ea067258ae33ad7b641013e2102f68854e7a795595189eb47c55"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "73d71b511bb1ea067258ae33ad7b641013e2102f68854e7a795595189eb47c55"
+          },
+          "properties": {
+            "issue_severity": "MEDIUM",
+            "issue_confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "1c753121-1472-370f-b83a-b49140aafd1d",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\"Vulnerability in Parsing Untrusted XML Data with xml.sax.parseString: Use Defusedxml Equivalent Function or Call defusedxml.defuse_stdlib()\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/vulnpy/trigger/xxe.py"
+                },
+                "region": {
+                  "startLine": 16,
+                  "startColumn": 12,
+                  "endLine": 16,
+                  "endColumn": 57,
+                  "snippet": {
+                    "text": "    return sax.parseString(user_input, ContentHandler())\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 15,
+                  "endLine": 16,
+                  "snippet": {
+                    "text": "def do_xml_sax_parsestring(user_input):\n    return sax.parseString(user_input, ContentHandler())\n"
+                  }
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "glog-pfp-ruleFileLineCode/v1": "ef128fbf2a91020c0ddf9a6f39251e1b343d69be8421c699d13ae7a6eeaf193d",
+            "glog-pfp-ruleFileCode/v1": "260c0ffe69d97538582f6757b20494d977f0c5d9e5549853640e7456a3b55153"
+          },
+          "fingerprints": {
+            "glog-fp-ruleFileCode/v1": "260c0ffe69d97538582f6757b20494d977f0c5d9e5549853640e7456a3b55153"
+          },
+          "properties": {
+            "issue_severity": "MEDIUM",
+            "issue_confidence": "HIGH"
+          }
+        }
+      ],
+      "newlineSequences": [
+        "\r\n",
+        "\n"
+      ]
+    }
+  ]
+}
